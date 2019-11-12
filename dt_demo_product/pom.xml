@@ -38,7 +38,7 @@
 		</dependency>
 		<dependency> 
   	<groupId>dawdler</groupId>
-	<artifactId>dawlder-distributed-trasaction</artifactId>
+	<artifactId>dawdler-distributed-trasaction</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
    </dependency>
 		
