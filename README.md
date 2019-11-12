@@ -1,4 +1,4 @@
-﻿spring cloud实现的分布式事务框架-v0.1
+# spring cloud实现的分布式事务框架-v0.1
 ## 项目介绍
 基于spring cloud 研发的分布式事务架构，用来解决多数据库下数据不一致的问题。
 ## 项目结构
@@ -23,5 +23,8 @@
  5、更改项目中的mysql配置及redis，mq等配置  
  6、启动  eureka-server， dt_demo-product，dt_demo_user ，dt_demo_order ，dt_demo_compensator 。(先启动eureka 其他顺序无要求)  
  7、访问dt_demo_order 的index.html 测试  
+ 
+ 
+ btw： 对性能要求高的可以用 dawdler或其他的rpc来替换spring cloud，如今项目用的spring cloud 无奈之下才基于它开发的，日后会做一般dawdler的
  
 
