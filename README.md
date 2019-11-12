@@ -24,4 +24,7 @@
  6、启动  eureka-server， dt_demo-product，dt_demo_user ，dt_demo_order ，dt_demo_compensator 。(先启动eureka 其他顺序无要求)  
  7、访问dt_demo_order 的index.html 测试  
  
+ 
+ btw： 对性能要求高的可以用 dawdler或其他的rpc来替换spring cloud，如今项目用的spring cloud 无奈之下才基于它开发的，日后会做一般dawdler的
+ 
 
