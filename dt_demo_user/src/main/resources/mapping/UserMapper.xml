@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pttl.mapper.user.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.pttl.entity.user.User">
+        <result column="userid" jdbcType="INTEGER" property="userid" />
+        <result column="gold" jdbcType="DECIMAL" property="gold" />
+    </resultMap>
+    <update id="updatePaymentUser">
+        update user set gold=gold-#{payment} where userid = #{userid} and gold-#{payment}>0
+    </update>
+
+    <insert id="insertUserGoldInfo" parameterType="com.pttl.entity.user.UserGoldInfo">
+        insert into user_gold_info values (#{branchTxId},#{userid},#{gold},#{status},#{addtime})
+    </insert>
+</mapper>

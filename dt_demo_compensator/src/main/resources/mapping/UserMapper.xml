@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pttl.mapper.user.UserMapper">
+    <update id="updatePaymentUser">
+        update user set gold=gold+#{payment} where userid = #{userid}
+    </update>
+    
+    <update id="updateUserGoldInfo">
+        update user_gold_info set status=#{status} where branch_tx_id = #{branch_tx_id} and  status ='commiting'
+    </update>
+    
+    <select id="selectUserGoldInfo" resultType="java.util.HashMap">
+        select gold,userid from user_gold_info where branch_tx_id = #{branch_tx_id} and status ='commiting'
+    </select>
+    
+</mapper>

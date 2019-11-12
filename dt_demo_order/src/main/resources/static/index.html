@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <span>产品：</span><input id="product" type="text"/>
+</div>
+<div>
+    <span>数量：</span><input id="num" type="text"/>
+</div>
+<div>
+    <input type="button" onclick="buyProduct();" value="购买">
+</div>
+</body>
+<script type="text/javascript">
+    function buyProduct(){
+        $.ajax({
+            url:"/buyProduct",
+            type:"POST",
+            data:{
+                "product":$("#product").val(),
+                "num":$("#num").val()
+            },
+            success:function(data){
+                alert(data);
+            }
+        })
+    }
+</script>
+</html>

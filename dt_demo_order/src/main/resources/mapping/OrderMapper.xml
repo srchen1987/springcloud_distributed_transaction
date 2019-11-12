@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pttl.mapper.order.OrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.pttl.service.order.entity.Order">
+        <result column="orderid" jdbcType="VARCHAR" property="orderid" />
+        <result column="pid" jdbcType="INTEGER" property="pid" />
+        <result column="gold" jdbcType="DECIMAL" property="gold" />
+        <result column="quantity" jdbcType="INTEGER" property="quantity" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="addtime" jdbcType="INTEGER" property="addtime" />
+
+    </resultMap>
+
+    <insert id="insertOrder" parameterType="com.pttl.service.order.entity.Order">
+      insert into `order` values (#{orderid},#{pid},#{gold},#{quantity},#{status},#{addtime})
+    </insert>
+
+  
+</mapper>
