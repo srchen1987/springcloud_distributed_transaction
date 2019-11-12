@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisPool;
 /**
  * 
  * @ClassName:  RedisRepository   
- * @Description:   基于redis的实现
+ * @Description:   基于redis的实现,为节约时间 直接copy tcc transaction代码 改造
  * @author: srchen    
  * @date:   2019年11月01日 下午10:19:32
  */
