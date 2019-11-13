@@ -8,7 +8,7 @@
 
 ### 使用实例
 
- dt_demo_order 订单模块(含下单页面)
+ dt_demo_order 订单模块(含下单页面)  
  dt_demo_user 用户模块  
  dt_demo-product 产品模块  
  dt_demo_compensator 补偿器模块    
