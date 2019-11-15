@@ -61,6 +61,8 @@ public class DistributedTransactionContext<T> implements Serializable,Cloneable{
 	public void setDatas(Map<String, Object> datas) {
 		this.datas = datas;
 	}
+	
+	
 	public String getStatus() {
 		return status;
 	}
@@ -95,7 +97,7 @@ public class DistributedTransactionContext<T> implements Serializable,Cloneable{
 		this.branchTxId = branchTxId;
 	}
 	
-	public static DistributedTransactionContext getDistributedTransactionContext() {
+	public static DistributedTransactionContext  getDistributedTransactionContext() {
 		return (DistributedTransactionContext) TLS.get(DISTRIBUTEDTRANSACTIONCONTEXT_KEY);
 	}
 	

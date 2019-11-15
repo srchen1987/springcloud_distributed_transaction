@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisPool;
 /**
  * 
  * @ClassName:  RedisRepository   
- * @Description:   基于redis的实现,为节约时间 直接copy tcc transaction代码 改造
+ * @Description:   基于redis的实现
  * @author: srchen    
  * @date:   2019年11月01日 下午10:19:32
  */
@@ -21,6 +21,7 @@ import redis.clients.jedis.JedisPool;
 public class RedisRepository extends TransactionRepository {
 	@Autowired
 	private JedisPool jedisPool;
+	private static final String PREFIX = "gtid_";
 
 	@Override
 	public int create(DistributedTransactionContext transaction) throws Exception {
@@ -30,7 +31,7 @@ public class RedisRepository extends TransactionRepository {
 		return execute(jedisPool, new JedisExecutor<Integer>() {
 			@Override
 			public Integer execute(Jedis jedis) {
-				jedis.hmset(transaction.getGlobalTxId().getBytes(), map);
+				jedis.hmset((transaction.getGlobalTxId()+PREFIX).getBytes(), map);
 				return 1;
 			}
 		});
@@ -45,7 +46,7 @@ public class RedisRepository extends TransactionRepository {
 				Map<byte[],byte[]> map = jedis.hgetAll(transaction.getGlobalTxId().getBytes());
 				if(map!=null) {
 					map.put(transaction.getBranchTxId().getBytes(), datas);
-					jedis.hmset(transaction.getGlobalTxId().getBytes(), map);
+					jedis.hmset((transaction.getGlobalTxId()+PREFIX).getBytes(), map);
 					return 1;
 				}
 				return 0;
@@ -58,7 +59,7 @@ public class RedisRepository extends TransactionRepository {
 		return execute(jedisPool, new JedisExecutor<Integer>() {
 			@Override
 			public Integer execute(Jedis jedis) {
-				jedis.hdel(globalTxId,branchTxId);
+				jedis.hdel((globalTxId+PREFIX),branchTxId);
 				return 1;
 			}
 		});
@@ -81,7 +82,7 @@ public class RedisRepository extends TransactionRepository {
 		return execute(jedisPool, new JedisExecutor<List<DistributedTransactionContext>>() {
 			@Override
 			public List<DistributedTransactionContext> execute(Jedis jedis) throws Exception {
-					Collection<byte[]> collection = jedis.hgetAll(globalTxId.getBytes()).values();
+					Collection<byte[]> collection = jedis.hgetAll((globalTxId+PREFIX).getBytes()).values();
 					for(byte [] bs:collection) {
 							list.add(serializer.deserialize(bs));
 					}
@@ -102,7 +103,7 @@ public class RedisRepository extends TransactionRepository {
 		return execute(jedisPool, new JedisExecutor<Integer>() {
 			@Override
 			public Integer execute(Jedis jedis) throws Exception {
-					Collection<byte[]> collection = jedis.hgetAll(globalTxId.getBytes()).values();
+					Collection<byte[]> collection = jedis.hgetAll((globalTxId+PREFIX).getBytes()).values();
 					for(byte [] bs:collection) {
 						DistributedTransactionContext context = (DistributedTransactionContext) serializer.deserialize(bs);
 						if(status!=null) {
@@ -112,7 +113,7 @@ public class RedisRepository extends TransactionRepository {
 						map.put(context.getBranchTxId().getBytes(),bs);
 					}
 					if(!map.isEmpty()) {
-						String res = jedis.hmset(globalTxId.getBytes(),map);
+						String res = jedis.hmset((globalTxId+PREFIX).getBytes(),map);
 					}
 				return 1;
 			}
@@ -125,7 +126,7 @@ public class RedisRepository extends TransactionRepository {
 		return execute(jedisPool, new JedisExecutor<List<DistributedTransactionContext>>() {
 			@Override
 			public List<DistributedTransactionContext> execute(Jedis jedis) throws Exception {
-				Set<byte[]> mkeys= jedis.keys("*".getBytes());
+				Set<byte[]> mkeys= jedis.keys((PREFIX+"*").getBytes());
 				for(byte [] keys:mkeys) {
 					Collection<byte[]> collection = jedis.hgetAll(keys).values();
 					for(byte [] bs:collection) {
