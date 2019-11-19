@@ -1,5 +1,6 @@
 package com.pttl.distributed.transaction.util;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -14,7 +15,7 @@ import redis.clients.jedis.JedisPoolConfig;
  * @author: srchen    
 * @date:   2019年11月02日 上午0:05:52
  */
-@Configuration
+@Configuration("distributedRedisConfig")
 @PropertySource("classpath:application.properties")
 public class RedisConfig {
  

@@ -15,7 +15,7 @@ import org.springframework.jms.core.JmsTemplate;
  * @author: srchen
  * @date:   2019年11月02日 上午0:02:41
  */
-@Configuration
+@Configuration("distributedJmsConfig")
 @PropertySource("classpath:application.properties")
 public class JmsConfig {
 //	public JmsTemplate jmsTemplate(ActiveMQConnectionFactory factory) {
