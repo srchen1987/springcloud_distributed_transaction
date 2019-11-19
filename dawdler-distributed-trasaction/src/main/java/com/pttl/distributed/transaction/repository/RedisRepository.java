@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
 import redis.clients.jedis.Jedis;
@@ -18,7 +21,12 @@ import redis.clients.jedis.JedisPool;
  * @date:   2019年11月01日 下午10:19:32
  */
 @Component
+@Configuration
+@PropertySource("classpath:application.properties")
 public class RedisRepository extends TransactionRepository {
+	@Value("${spring.redis.database}")
+  private int database;
+	
 	@Autowired
 	private JedisPool jedisPool;
 	private static final String PREFIX = "gtid_";
@@ -75,7 +83,6 @@ public class RedisRepository extends TransactionRepository {
 			}
 		});
 	}
-
 	@Override
 	public List<DistributedTransactionContext> findAllByGlobalTxId(String globalTxId) throws Exception {
 		List list = new ArrayList();
@@ -143,10 +150,12 @@ public class RedisRepository extends TransactionRepository {
 	}
 	
 	
-	private static <T> T execute(JedisPool jedisPool, JedisExecutor<T> executor) throws Exception{
+	private <T> T execute(JedisPool jedisPool, JedisExecutor<T> executor) throws Exception{
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
+			if(database!=0)
+				jedis.select(0);
 			return executor.execute(jedis);
 		}finally {
 			if (jedis != null) {

@@ -89,7 +89,8 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 							"This transaction method's args must be contain DistributedTransactionContext :\t"
 									+ invocation.getThis() + "\t" + method.getName());
 				DistributedTransactionContext branch_dc = new DistributedTransactionContext(globalTxId);
-				branch_dc.init();
+				branch_dc.setAttachment(dc.getAttachment());
+				branch_dc.init(); 
 				args[position] = branch_dc;
 				branch_dc.setAction(dt.action());
 				DistributedTransactionContext serializableData = (DistributedTransactionContext) branch_dc.clone();
@@ -108,6 +109,7 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 					error = e;
 					success = false;
 				}
+				dc.setAttachment(null);
 				if (!success) {
 					dc.setCancel(true);
 					if (error != null)
