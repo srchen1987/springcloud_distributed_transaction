@@ -61,12 +61,24 @@
 			<version>3.1.0</version>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-            <version>1.8.0.RELEASE</version>
-    </dependency>
-        
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>1.8.0.RELEASE</version>
+		</dependency>
 
+
+
+		<!-- <dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+			<version>3.5.0</version>
+		</dependency>
+
+<dependency>
+		<groupId>org.redisson</groupId>
+		<artifactId>redisson-spring-boot-starter</artifactId>
+		<version>3.9.1</version>
+	</dependency> -->
 
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>

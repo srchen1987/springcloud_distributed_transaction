@@ -36,7 +36,7 @@ public class RedisAutoConfig {
 }
  */
 @Configuration
-public class SpringRedisTemplateRepository extends TransactionRepository implements InitializingBean {
+public class SpringRedisTemplateRepository extends TransactionRepository /* implements InitializingBean */ {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
@@ -49,7 +49,7 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 		map.put(transaction.getBranchTxId().getBytes(), datas);
 		return (Integer) redisTemplate.execute(new RedisCallback() {
 			public Object doInRedis(RedisConnection connection) throws DataAccessException {
-				connection.hMSet((transaction.getGlobalTxId() + PREFIX).getBytes(), map);
+				connection.hMSet((PREFIX+transaction.getGlobalTxId()).getBytes(), map);
 				return 1;
 			}
 		});
@@ -63,7 +63,7 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 				Map<byte[],byte[]> map = connection.hGetAll(transaction.getGlobalTxId().getBytes());
 				if(map!=null) {
 					map.put(transaction.getBranchTxId().getBytes(), datas);
-					connection.hMSet((transaction.getGlobalTxId()+PREFIX).getBytes(), map);
+					connection.hMSet((PREFIX+transaction.getGlobalTxId()).getBytes(), map);
 					return 1;
 				}
 				return 0;
@@ -76,7 +76,7 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 	public int deleteByBranchTxId(String globalTxId, String branchTxId) throws Exception {
 		return (Integer) redisTemplate.execute(new RedisCallback() {
 			public Object doInRedis(RedisConnection connection) throws DataAccessException {
-				connection.hDel((globalTxId+PREFIX).getBytes(),branchTxId.getBytes());
+				connection.hDel((PREFIX+globalTxId).getBytes(),branchTxId.getBytes());
 				return 1;
 			}
 		});
@@ -87,7 +87,7 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 	public int deleteByGlobalTxId(String globalTxId) throws Exception {
 		return (Integer) redisTemplate.execute(new RedisCallback() {
 			public Object doInRedis(RedisConnection connection) throws DataAccessException {
-				connection.del((globalTxId+PREFIX).getBytes());
+				connection.del((PREFIX+globalTxId).getBytes());
 				return 1;
 			}
 		});
@@ -99,7 +99,7 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 		List list = new ArrayList();
 		return (List) redisTemplate.execute(new RedisCallback() {
 			public Object doInRedis(RedisConnection connection) throws DataAccessException {
-				Collection<byte[]> collection = connection.hGetAll((globalTxId+PREFIX).getBytes()).values();
+				Collection<byte[]> collection = connection.hGetAll((PREFIX+globalTxId).getBytes()).values();
 				for(byte [] bs:collection) {
 					  try {
 							list.add(serializer.deserialize(bs));
@@ -121,7 +121,7 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 		Map map = new HashMap();
 		return (Integer) redisTemplate.execute(new RedisCallback() {
 			public Object doInRedis(RedisConnection connection) throws DataAccessException {
-				Collection<byte[]> collection = connection.hGetAll((globalTxId+PREFIX).getBytes()).values();
+				Collection<byte[]> collection = connection.hGetAll((PREFIX+globalTxId).getBytes()).values();
 				for(byte [] bs:collection) {
 					try {
 						DistributedTransactionContext context = (DistributedTransactionContext) serializer.deserialize(bs);
@@ -135,7 +135,7 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 					}
 				}
 				if(!map.isEmpty()) {
-						connection.hMSet((globalTxId+PREFIX).getBytes(),map);
+						connection.hMSet((PREFIX+globalTxId).getBytes(),map);
 				}
 				return 1;
 			}
@@ -168,15 +168,17 @@ public class SpringRedisTemplateRepository extends TransactionRepository impleme
 			}
 		});
 	}
-	@Value("${spring.redis.database}")
-	private int database;
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		JedisConnectionFactory factory = 
-				(JedisConnectionFactory) redisTemplate.getConnectionFactory();
-				factory.setDatabase(database);
-				redisTemplate.setConnectionFactory(factory);
-	}
+//	@Value("${spring.redis.database}")
+//	private int database;
+//	
+//	@Override
+//	public void afterPropertiesSet() throws Exception {
+//		JedisConnectionFactory factory = 
+//				(JedisConnectionFactory) redisTemplate.getConnectionFactory();
+//				factory.setDatabase(database);
+//				redisTemplate.setConnectionFactory(factory);
+//				
+//				
+//	}
 	 
 }

@@ -14,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
         block-when-exhausted: true
-        database: 0
+        database: 1
         host: localhost
         pool:
           max-active: 1024
