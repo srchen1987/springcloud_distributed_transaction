@@ -5,10 +5,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.pttl.distributed.transaction.annotation.EnableDistributedTransaction;
+
 @SpringBootApplication
 @ComponentScan(value = "com.pttl")
 @EnableScheduling
 @EnableAspectJAutoProxy
+@EnableDistributedTransaction(transactionRepository = "com.pttl.distributed.transaction.repository.SpringRedisTemplateRepository")
 public class CompensateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CompensateApplication.class, args);

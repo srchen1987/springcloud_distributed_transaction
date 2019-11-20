@@ -32,7 +32,8 @@ import com.pttl.compenstate.multidatasource.DataSourceModule.DataSourceName;
  * @date:   2019年11月02日 上午02:20:13
  */
 @Configuration
-@PropertySource("classpath:application.properties")
+//@PropertySource("classpath:application.properties")
+@ConfigurationProperties
 @MapperScan(basePackages = "com.pttl.mapper.*", sqlSessionFactoryRef = "SqlSessionFactory")
 public class DataSourceConfig implements TransactionManagementConfigurer, ApplicationContextAware {
 	

@@ -1,14 +1,12 @@
-package com.pttl.distributed.transaction.util;
+package com.pttl.service.user.impl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import com.pttl.distributed.transaction.aspetct.DistributedTransactionInterceptor;
-
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+ 
 /**
  * 
  * @ClassName:  RedisConfig   
@@ -16,9 +14,8 @@ import redis.clients.jedis.JedisPoolConfig;
  * @author: srchen    
 * @date:   2019年11月02日 上午0:05:52
  */
-@ConditionalOnBean(DistributedTransactionInterceptor.class)
-@Configuration("distributedRedisConfig")
-//@PropertySource("classpath:application.properties")
+@Configuration
+@PropertySource("classpath:application.properties")
 public class RedisConfig {
  
     @Value("${spring.redis.host}")
@@ -30,20 +27,17 @@ public class RedisConfig {
     @Value("${spring.redis.timeout}")
     private int timeout;
  
-    @Value("${spring.redis.pool.max-idle}")
+    @Value("${spring.redis.jedis.pool.max-idle}")
     private int maxIdle;
  
-    @Value("${spring.redis.pool.max-wait}")
+    @Value("${spring.redis.jedis.pool.max-wait}")
     private long maxWaitMillis;
  
     @Value("${spring.redis.password}")
     private String password;
  
     @Value("${spring.redis.block-when-exhausted}")
-    private boolean blockWhenExhausted;
-    
-		@Value("${spring.redis.database}")
-	  private int database;
+    private boolean  blockWhenExhausted;
  
     @Bean
     public JedisPool redisPoolFactory()  throws Exception{
@@ -53,20 +47,12 @@ public class RedisConfig {
         // 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true
         jedisPoolConfig.setBlockWhenExhausted(blockWhenExhausted);
         // 是否启用pool的jmx管理功能, 默认true
-        jedisPoolConfig.setJmxEnabled(false);
+        jedisPoolConfig.setJmxEnabled(true);
         
         if("".equals(password))password=null;
         		 
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password,database);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
         return jedisPool;
     }
-
-	public int getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(int database) {
-		this.database = database;
-	}
  
 }

@@ -8,7 +8,7 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-/*import com.pttl.distributed.transaction.repository.RedisRepository;*/
+import com.pttl.distributed.transaction.annotation.EnableDistributedTransaction;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
@@ -16,9 +16,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableHystrix
 @ComponentScan(value = "com.pttl")
 @MapperScan("com.pttl.mapper.order")
-
+//@EnableTransactionRepository(transactionRepository = "com.pttl.distributed.transaction.repository.RedisRepository")
+@EnableDistributedTransaction(transactionRepository = "com.pttl.distributed.transaction.repository.SpringRedisTemplateRepository")
 public class OrderApplication {
-
 	public static void main(String[] args) {
 		ConfigurableApplicationContext application = SpringApplication.run(OrderApplication.class, args);
 	

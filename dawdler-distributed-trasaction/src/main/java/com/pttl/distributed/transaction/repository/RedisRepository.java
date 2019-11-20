@@ -6,10 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -20,13 +16,9 @@ import redis.clients.jedis.JedisPool;
  * @author: srchen    
  * @date:   2019年11月01日 下午10:19:32
  */
-@Component
-@Configuration
-@PropertySource("classpath:application.properties")
+//@Component
 public class RedisRepository extends TransactionRepository {
-	@Value("${spring.redis.database}")
-  private int database;
-	
+
 	@Autowired
 	private JedisPool jedisPool;
 	private static final String PREFIX = "gtid_";
@@ -47,6 +39,7 @@ public class RedisRepository extends TransactionRepository {
 
 	@Override
 	public int update(DistributedTransactionContext transaction) throws Exception {
+		byte[] datas = serializer.serialize(transaction);
 		return execute(jedisPool, new JedisExecutor<Integer>() {
 			@Override
 			public Integer execute(Jedis jedis) throws Exception {
@@ -93,7 +86,6 @@ public class RedisRepository extends TransactionRepository {
 					for(byte [] bs:collection) {
 							list.add(serializer.deserialize(bs));
 					}
-				
 				return list; 
 			}
 		});
@@ -154,8 +146,6 @@ public class RedisRepository extends TransactionRepository {
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
-			if(database!=0)
-				jedis.select(0);
 			return executor.execute(jedis);
 		}finally {
 			if (jedis != null) {

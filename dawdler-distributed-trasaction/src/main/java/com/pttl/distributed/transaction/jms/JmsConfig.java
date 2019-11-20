@@ -2,9 +2,9 @@ package com.pttl.distributed.transaction.jms;
 import org.apache.activemq.spring.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
@@ -16,7 +16,8 @@ import org.springframework.jms.core.JmsTemplate;
  * @date:   2019年11月02日 上午0:02:41
  */
 @Configuration("distributedJmsConfig")
-@PropertySource("classpath:application.properties")
+//@PropertySource("classpath:application.properties")
+@ConfigurationProperties
 public class JmsConfig {
 //	public JmsTemplate jmsTemplate(ActiveMQConnectionFactory factory) {
 //		JmsTemplate jmsTemplate = new JmsTemplate();
@@ -27,6 +28,9 @@ public class JmsConfig {
 //		return jmsTemplate;
 //	}
 
+	
+	
+	
 	@Value("${activemq.broker-url}")
 	private String brokerUrl;
 	@Value("${activemq.username}")
@@ -56,7 +60,7 @@ public class JmsConfig {
     }
 	@Bean
 	public JmsTemplate jmsTemplate() {
-		return new JmsTemplate(activeMQConnectionFactory());
+		return new JmsTemplate(activeMQConnectionFactory);
 	}
 
 }

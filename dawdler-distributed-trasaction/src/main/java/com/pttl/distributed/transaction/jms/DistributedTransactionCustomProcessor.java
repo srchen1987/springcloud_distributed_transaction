@@ -1,5 +1,5 @@
 package com.pttl.distributed.transaction.jms;
-import java.util.Map;
+import com.pttl.distributed.transaction.context.DistributedTransactionContext;
 /**
  * 
  * @ClassName:  DistributedTransactionCustomProcessor   
@@ -8,5 +8,8 @@ import java.util.Map;
  * @date:   2019年11月02日 上午1:26:21
  */
 public abstract class DistributedTransactionCustomProcessor {
-	public abstract boolean process(String globalTxId,String branchTxId,Map<String,Object> datas,String status); 
+//	public abstract boolean process(String globalTxId,String branchTxId,Map<String,Object> datas,String status); 
+
+
+	public abstract boolean process(DistributedTransactionContext context,String status); 
 }

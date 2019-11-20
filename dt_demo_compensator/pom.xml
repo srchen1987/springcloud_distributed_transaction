@@ -55,12 +55,12 @@
 		<dependency>
 			<groupId>dawdler</groupId>
 			<artifactId>dawdler-distributed-trasaction</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-RELEASES</version>
 		</dependency>
 		<dependency>
 			<groupId>dawdler</groupId>
 			<artifactId>dawdler-distributed-compensator</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-RELEASES</version>
 		</dependency> 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

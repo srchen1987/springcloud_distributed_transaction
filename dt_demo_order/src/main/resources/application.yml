@@ -12,6 +12,19 @@ spring:
     password: 123456
     url: jdbc:mysql://localhost:3306/order?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+        block-when-exhausted: true
+        database: 0
+        host: localhost
+        pool:
+          max-active: 1024
+          max-idle: 200
+          max-wait: 10000
+          min-idle: 0
+        password: ''
+        port: 6379
+        timeout: 10000
+    
 feign:
   hystrix:
      enabled: false
@@ -19,3 +32,8 @@ feign:
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: com.example.entity
+activemq:
+    broker-url: tcp://127.0.0.1:61616
+    password: jackson123
+    username: jackson
+  

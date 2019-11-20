@@ -71,7 +71,8 @@ public class JmsConsumer implements ApplicationContextAware{
 				Object obj = applicationContext.getBean(action);
 				String branchTxId = dt.getBranchTxId();
 				DistributedTransactionCustomProcessor dp = (DistributedTransactionCustomProcessor) obj;
-				boolean result = dp.process(globalTxId, branchTxId, datas, status);
+//				boolean result = dp.process(globalTxId, branchTxId, datas, status);
+				boolean result = dp.process(dt, status);
 				if(result) {
 					try {
 						transactionRepository.deleteByBranchTxId(globalTxId, branchTxId);

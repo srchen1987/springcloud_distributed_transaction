@@ -3,16 +3,19 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.UUID;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
-
 import com.pttl.distributed.transaction.annotation.DistributedTransaction;
 import com.pttl.distributed.transaction.annotation.TransactionStatus;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
@@ -27,8 +30,8 @@ import com.pttl.distributed.transaction.util.JsonUtils;
  * @author: srchen    
  * @date:   2019年11月02日 上午00:16:24
  */
-@Component
 public class DistributedTransactionInterceptor implements MethodInterceptor {
+	private static Logger log = LoggerFactory.getLogger(DistributedTransactionInterceptor.class);
 	
 	@Autowired(required = false)
 	TransactionInterceptInvoker invoker;
@@ -62,9 +65,17 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 				DistributedTransactionContext.setDistributedTransactionContext(null);
 			}
 			if (dc.isCancel()) { 
-				cancel(action, globalTxId);
+				try {
+					cancel(action, globalTxId);
+				} catch (Exception e) {
+					log.error("distributed_transaction_cancel",e);
+				}
 			} else {
-				confirm(action, globalTxId); 
+				try {
+					confirm(action, globalTxId); 
+				} catch (Exception e) {
+					log.error("distributed_transaction_confirm",e);
+				}
 			}
 			return obj;
 		}else {
@@ -105,10 +116,10 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 						obj = invoker.invoke(invocation, dc);
 					else
 						obj = invocation.proceed();
-				} catch (Exception e) {
+				 } catch (Exception e) {
 					error = e;
 					success = false;
-				}
+				 }
 				dc.setAttachment(null);
 				if (!success) {
 					dc.setCancel(true);
@@ -134,7 +145,8 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 
 	@Autowired
 	private TransactionRepository transactionRepository;
-
+	
+	 ServiceLoader<TransactionRepository> services = ServiceLoader.load(TransactionRepository.class);
 	public static final String QNAME = "distributed_transaction_queue";
 
 	@Pointcut("@annotation(com.pttl.distributed.transaction.annotation.DistributedTransaction)")

@@ -12,7 +12,7 @@ import com.pttl.distributed.transaction.annotation.DistributedTransaction;
  * @author: srchen    
  * @date:   2019年11月02日 上午1:19:21
  */
-@Component
+//@Component
 public class AnnotationBeanPostProcessor extends AbstractBeanFactoryAwareAdvisingPostProcessor{
 	
 	private static final long serialVersionUID = -5299257531723431065L;

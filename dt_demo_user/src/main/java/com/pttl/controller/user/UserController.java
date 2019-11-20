@@ -16,6 +16,7 @@ public class UserController {
 	
 	@RequestMapping("/payment")
 	public boolean payment(@RequestBody DistributedTransactionContext distributedTransactionContext,@RequestParam("userId") int userid,@RequestParam("payment") double payment) {
+		System.out.println("#########"+distributedTransactionContext.getAttachment());
 		userService.updatePaymentUser(distributedTransactionContext.getBranchTxId(),userid, payment);
 		return false;
 	}

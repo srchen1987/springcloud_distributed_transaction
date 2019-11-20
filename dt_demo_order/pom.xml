@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.pttl</groupId>
+	<groupId>com.pttl</groupId> 
 	<artifactId>dt_demo_order</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>dawdler</groupId>
 			<artifactId>dawdler-distributed-trasaction</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-RELEASES</version>
 		</dependency>
 		
 		

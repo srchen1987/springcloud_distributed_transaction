@@ -1,17 +1,21 @@
 package com.pttl.service.order.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.pttl.distributed.transaction.annotation.DistributedTransaction;
 import com.pttl.distributed.transaction.annotation.TransactionStatus;
+import com.pttl.distributed.transaction.context.DistributedTransactionContext;
 import com.pttl.mapper.order.OrderMapper;
 import com.pttl.service.order.OrderService;
 import com.pttl.service.order.ProductService;
 import com.pttl.service.order.UserService;
 import com.pttl.service.order.entity.Order;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -48,7 +52,13 @@ public class OrderServiceImpl implements OrderService{
 		order.setStatus(TransactionStatus.COMMITING);
 		order.setAddtime((int)System.currentTimeMillis());
 		try {
+			List list = new ArrayList();
+			list.add(1);
+			DistributedTransactionContext.getDistributedTransactionContext().setAttachment(list);
 			userService.payment(null,userId,payment);
+			List list2 = new ArrayList();
+			list2.add(2);
+			DistributedTransactionContext.getDistributedTransactionContext().setAttachment(list2);
 			productService.payment(null,productId,repertory);
 			orderMapper.insertOrder(order);
 			return true;
