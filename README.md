@@ -24,3 +24,5 @@
  6、启动  eureka-server， dt_demo-product，dt_demo_user ，dt_demo_order ，dt_demo_compensator 。(先启动eureka 其他顺序无要求)  
  7、访问dt_demo_order 的index.html 测试  
  
+流程图如下：
+![image](https://raw.githubusercontent.com/wiki/srchen1987/springcloud_distributed_transaction/transaction.png)
