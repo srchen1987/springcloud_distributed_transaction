@@ -5,6 +5,8 @@ eureka:
 server:
   port: 8765
 spring:
+  profiles:
+   active: dev
   application:
     name: order
   datasource:
@@ -36,4 +38,4 @@ activemq:
     broker-url: tcp://127.0.0.1:61616
     password: jackson123
     username: jackson
-  
+    transactionQueueName: distributed_transaction_queue

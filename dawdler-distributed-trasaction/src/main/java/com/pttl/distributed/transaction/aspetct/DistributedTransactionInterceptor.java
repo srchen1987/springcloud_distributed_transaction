@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.UUID;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,12 +14,11 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.stereotype.Component;
+
 import com.pttl.distributed.transaction.annotation.DistributedTransaction;
 import com.pttl.distributed.transaction.annotation.TransactionStatus;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
+import com.pttl.distributed.transaction.jms.JmsConfig;
 import com.pttl.distributed.transaction.jms.JmsSender;
 import com.pttl.distributed.transaction.repository.TransactionRepository;
 import com.pttl.distributed.transaction.util.JsonUtils;
@@ -34,7 +34,10 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 	private static Logger log = LoggerFactory.getLogger(DistributedTransactionInterceptor.class);
 	
 	@Autowired(required = false)
-	TransactionInterceptInvoker invoker;
+	private TransactionInterceptInvoker invoker;
+	
+	@Autowired(required = false)
+	private JmsConfig jmsConfig;
 	
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -104,13 +107,13 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 				branch_dc.init(); 
 				args[position] = branch_dc;
 				branch_dc.setAction(dt.action());
+				branch_dc.setStatus(TransactionStatus.COMMITING);
 				DistributedTransactionContext serializableData = (DistributedTransactionContext) branch_dc.clone();
 				serializableData.setDatas(datas);
 				Object obj = null;
 				Exception error = null;
 				boolean success = true;
 				try {
-					serializableData.setStatus(TransactionStatus.COMMITING);
 					transactionRepository.create(serializableData); 
 					if(invoker!=null)
 						obj = invoker.invoke(invocation, dc);
@@ -146,8 +149,8 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 	@Autowired
 	private TransactionRepository transactionRepository;
 	
-	 ServiceLoader<TransactionRepository> services = ServiceLoader.load(TransactionRepository.class);
-	public static final String QNAME = "distributed_transaction_queue";
+	ServiceLoader<TransactionRepository> services = ServiceLoader.load(TransactionRepository.class);
+//	public static final String QNAME = "distributed_transaction_queue";
 
 	@Pointcut("@annotation(com.pttl.distributed.transaction.annotation.DistributedTransaction)")
 	public void compensableService() {
@@ -187,7 +190,7 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 		data.put("globalTxId", globalTxId); 
 		transactionRepository.updateDataByGlobalTxId(globalTxId,data);
 		String msg = JsonUtils.objectToJson(data);
-		jmsSender.sent(QNAME, msg);
+		jmsSender.sent(jmsConfig.getTransactionQueueName(), msg);
 	}
 
 	
@@ -199,6 +202,6 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 		data.put("globalTxId", globalTxId);
 		transactionRepository.updateDataByGlobalTxId(globalTxId, data);
 		String msg = JsonUtils.objectToJson(data);
-		jmsSender.sent(QNAME, msg);
+		jmsSender.sent(jmsConfig.getTransactionQueueName(), msg);
 	}
 }

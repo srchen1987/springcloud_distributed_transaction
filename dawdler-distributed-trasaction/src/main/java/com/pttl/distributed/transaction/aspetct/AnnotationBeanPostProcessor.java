@@ -3,7 +3,6 @@ import org.springframework.aop.framework.autoproxy.AbstractBeanFactoryAwareAdvis
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.pttl.distributed.transaction.annotation.DistributedTransaction;
 /**
  * 
@@ -22,6 +21,7 @@ public class AnnotationBeanPostProcessor extends AbstractBeanFactoryAwareAdvisin
 	public void setBeanFactory(BeanFactory beanFactory) {
 		super.setBeanFactory(beanFactory);
 		setProxyTargetClass(true);
+		beforeExistingAdvisors=true;
 		this.advisor = new DistributedTransactionAdvisor(AnnotationMatchingPointcut.forMethodAnnotation(getDistributedTransactionClass()),distributedTransactionInterceptor);
 	}
 	public Class<DistributedTransaction> getDistributedTransactionClass() {

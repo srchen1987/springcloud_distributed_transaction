@@ -5,10 +5,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-
 import org.apache.activemq.command.ActiveMQMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-
-import com.pttl.distributed.transaction.aspetct.DistributedTransactionInterceptor;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
 import com.pttl.distributed.transaction.repository.TransactionRepository;
 import com.pttl.distributed.transaction.thread.DefaultThreadFactory;
@@ -34,7 +30,13 @@ import com.pttl.distributed.transaction.util.JsonUtils;
 @Component
 public class JmsConsumer implements ApplicationContextAware{
 	private static Logger log = LoggerFactory.getLogger(ApplicationContextAware.class);
+	
 	ExecutorService executor;
+	
+
+	@Autowired
+	private JmsConfig jmsConfig = null;
+	
 
 	@Autowired
 	TransactionRepository transactionRepository;
@@ -56,7 +58,7 @@ public class JmsConsumer implements ApplicationContextAware{
 	 * @author: srchen     
 	 * @date:   2019年11月02日 上午3:06:29
 	 */
-	@JmsListener(destination = DistributedTransactionInterceptor.QNAME, containerFactory = "jmsListenerContainerFactory")
+	@JmsListener(destination = "distributed_transaction_queue_${spring.profiles.active:}", containerFactory = "jmsListenerContainerFactory")
 	public void consumer(ActiveMQMessage message) throws JMSException {
 		String text = ((TextMessage) message).getText();
 		Map<String, String> map = JsonUtils.jsonToClass(text, Map.class);

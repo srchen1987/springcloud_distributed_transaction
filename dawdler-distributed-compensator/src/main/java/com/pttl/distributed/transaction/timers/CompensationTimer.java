@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.pttl.distributed.transaction.aspetct.DistributedTransactionInterceptor;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
+import com.pttl.distributed.transaction.jms.JmsConfig;
 import com.pttl.distributed.transaction.jms.JmsSender;
 import com.pttl.distributed.transaction.repository.TransactionRepository;
 import com.pttl.distributed.transaction.util.JsonUtils;
@@ -26,6 +27,9 @@ public class CompensationTimer {
 	TransactionRepository transactionRepository;
 	@Autowired
 	JmsSender jmsSender;
+
+	@Autowired(required = false)
+	private JmsConfig jmsConfig;
 	
 	 @Scheduled(fixedRate=15000)
     private void configureTasks() {
@@ -37,7 +41,7 @@ public class CompensationTimer {
 					data.put("action",dc.getAction());
 					data.put("globalTxId",dc.getGlobalTxId()); 
 					String msg = JsonUtils.objectToJson(data);
-					jmsSender.sent(DistributedTransactionInterceptor.QNAME, msg);
+					jmsSender.sent(jmsConfig.getTransactionQueueName(), msg);
 			    }
 		} catch (Exception e) {
 			log.error("",e);

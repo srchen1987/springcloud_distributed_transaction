@@ -1,21 +1,15 @@
 package com.pttl.controller.order;
-import com.pttl.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.pttl.service.order.OrderService;
 @RestController
 public class OrderController {
 
     @Autowired
     OrderService orderService;
     
-/*    @RequestMapping(value = "/hi",method = RequestMethod.GET)
-    @DistributedTransaction(sponsor = true, action = "myorder")
-    public String sayHi123(@RequestParam String name){
-
-    	return "hello.";
-    }*/
 
     @PostMapping(value = "/buyProduct")
     public String buyProduct(@RequestParam String product,@RequestParam String num){
@@ -27,4 +21,5 @@ public class OrderController {
             return "购买失败";
         }
     }
+    
 }

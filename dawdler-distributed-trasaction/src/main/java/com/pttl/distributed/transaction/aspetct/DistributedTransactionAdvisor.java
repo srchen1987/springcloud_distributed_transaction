@@ -37,23 +37,4 @@ public class DistributedTransactionAdvisor extends AbstractPointcutAdvisor{
 	public void setAdvice(DistributedTransactionInterceptor advice) {
 		this.advice = advice;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-		
-
-	 
-	
-	
-
 }

@@ -9,10 +9,6 @@ import com.pttl.distributed.transaction.context.DistributedTransactionContext;
 
 @FeignClient(value = "user")
 public interface UserService {
-   /* @RequestMapping(value = "/hi",method = RequestMethod.GET)
-    @DistributedTransaction(action = "myorder2")
-    String sayHiFromClientOne(DistributedTransactionContext context,@RequestParam(value = "name") String name);*/
-
     @RequestMapping("/payment")
     @DistributedTransaction(action = "userPayment")
     public boolean payment(@RequestBody DistributedTransactionContext distributedTransactionContext,@RequestParam("userId") int userId, @RequestParam("payment") double payment);

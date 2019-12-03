@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService{
 			orderMapper.insertOrder(order);
 			return true;
 		}catch (Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}

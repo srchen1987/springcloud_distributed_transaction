@@ -15,7 +15,7 @@ import org.springframework.jms.core.JmsTemplate;
  * @author: srchen
  * @date:   2019年11月02日 上午0:02:41
  */
-@Configuration("distributedJmsConfig")
+//@Configuration("distributedJmsConfig")
 //@PropertySource("classpath:application.properties")
 @ConfigurationProperties
 public class JmsConfig {
@@ -31,12 +31,25 @@ public class JmsConfig {
 	
 	
 	
+	public String getTransactionQueueName() {
+		return transactionQueueName;
+	}
+
+
+	public void setTransactionQueueName(String transactionQueueName) {
+		this.transactionQueueName = transactionQueueName;
+	}
 	@Value("${activemq.broker-url}")
 	private String brokerUrl;
 	@Value("${activemq.username}")
 	private String username;
 	@Value("${activemq.password}")
 	private String password;
+	
+	@Value("distributed_transaction_queue_${spring.profiles.active:}")
+	private String transactionQueueName;
+	
+	
 	@Autowired
 	private ActiveMQConnectionFactory activeMQConnectionFactory;
 
@@ -45,6 +58,8 @@ public class JmsConfig {
 		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
 		factory.setBrokerURL(brokerUrl);
 		factory.setAlwaysSyncSend(true);
+		factory.setUserName(username);
+		factory.setPassword(password);
 		return factory;
 	}
 
