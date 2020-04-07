@@ -3,6 +3,7 @@ import org.springframework.aop.framework.autoproxy.AbstractBeanFactoryAwareAdvis
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.pttl.distributed.transaction.annotation.DistributedTransaction;
 /**
  * 
@@ -11,7 +12,6 @@ import com.pttl.distributed.transaction.annotation.DistributedTransaction;
  * @author: srchen    
  * @date:   2019年11月02日 上午1:19:21
  */
-//@Component
 public class AnnotationBeanPostProcessor extends AbstractBeanFactoryAwareAdvisingPostProcessor{
 	
 	private static final long serialVersionUID = -5299257531723431065L;

@@ -34,8 +34,6 @@ public class JmsConsumer implements ApplicationContextAware{
 	ExecutorService executor;
 	
 
-	@Autowired
-	private JmsConfig jmsConfig = null;
 	
 
 	@Autowired
@@ -68,13 +66,15 @@ public class JmsConsumer implements ApplicationContextAware{
 		List<DistributedTransactionContext> list = transactionRepository.findAllByGlobalTxId(globalTxId);
 		for(DistributedTransactionContext dt : list) {
 			executor.execute(()->{
-				Map<String,Object> datas = dt.getDatas();
+//				Map<String,Object> datas = dt.getDatas();
 				String action = dt.getAction();
 				Object obj = applicationContext.getBean(action);
 				String branchTxId = dt.getBranchTxId();
 				DistributedTransactionCustomProcessor dp = (DistributedTransactionCustomProcessor) obj;
 //				boolean result = dp.process(globalTxId, branchTxId, datas, status);
 				boolean result = dp.process(dt, status);
+				log.debug("compensate_result: globalTxId:{} branchId:{} action:{} status:{} result:{}",dt.getGlobalTxId(),dt.getBranchTxId(),action,status,result);
+
 				if(result) {
 					try {
 						transactionRepository.deleteByBranchTxId(globalTxId, branchTxId);
@@ -82,7 +82,6 @@ public class JmsConsumer implements ApplicationContextAware{
 					} catch (Exception e) {
 						log.error("",e);
 					}
-				
 				}else {
 					dt.retryTimeIncre();
 					try {

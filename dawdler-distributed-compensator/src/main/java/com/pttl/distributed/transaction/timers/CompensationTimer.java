@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.pttl.distributed.transaction.aspetct.DistributedTransactionInterceptor;
+
+import com.pttl.distributed.transaction.annotation.TransactionStatus;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
 import com.pttl.distributed.transaction.jms.JmsConfig;
 import com.pttl.distributed.transaction.jms.JmsSender;
@@ -36,11 +37,14 @@ public class CompensationTimer {
 		 try {
 			 List<DistributedTransactionContext> list = transactionRepository.findALLBySecondsLater(10);
 			 for(DistributedTransactionContext dc : list) {
+				  String commiting = TransactionStatus.COMMITING;
+				  if(commiting.equals(dc.getStatus()))continue;
 					Map data = new HashMap();
 					data.put("status",dc.getStatus());
 					data.put("action",dc.getAction());
 					data.put("globalTxId",dc.getGlobalTxId()); 
 					String msg = JsonUtils.objectToJson(data);
+					log.debug("transaction compensate:{}",msg);
 					jmsSender.sent(jmsConfig.getTransactionQueueName(), msg);
 			    }
 		} catch (Exception e) {

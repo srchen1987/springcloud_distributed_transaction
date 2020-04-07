@@ -55,7 +55,7 @@
 		</dependency>
 		<dependency> 
   	<groupId>dawdler</groupId>
-	<artifactId>dawdler-distributed-trasaction</artifactId>
+	<artifactId>dawdler-distributed-transaction</artifactId>
 	<version>	0.0.1-RELEASES</version>
    </dependency>
 		<dependency>

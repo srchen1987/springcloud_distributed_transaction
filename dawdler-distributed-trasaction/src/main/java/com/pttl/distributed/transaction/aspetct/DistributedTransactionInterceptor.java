@@ -1,4 +1,5 @@
 package com.pttl.distributed.transaction.aspetct;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
@@ -25,27 +26,27 @@ import com.pttl.distributed.transaction.util.JsonUtils;
 
 /**
  * 
- * @ClassName:  DistributedTransactionInterceptor   
- * @Description:   aop拦截器 根据事务注解来做事务处理
- * @author: srchen    
- * @date:   2019年11月02日 上午00:16:24
+ * @ClassName: DistributedTransactionInterceptor
+ * @Description: aop拦截器 根据事务注解来做事务处理
+ * @author: srchen
+ * @date: 2019年11月02日 上午00:16:24
  */
 public class DistributedTransactionInterceptor implements MethodInterceptor {
 	private static Logger log = LoggerFactory.getLogger(DistributedTransactionInterceptor.class);
-	
+
 	@Autowired(required = false)
 	private TransactionInterceptInvoker invoker;
-	
+
 	@Autowired(required = false)
 	private JmsConfig jmsConfig;
-	
+
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		Method method = invocation.getMethod();
 		DistributedTransaction dt = method.getAnnotation(DistributedTransaction.class);
 		if (dt == null) {
 			Object obj = invocation.proceed();
-			return obj; 
+			return obj;
 		}
 		DistributedTransactionContext dc = DistributedTransactionContext.getDistributedTransactionContext();
 		if (dt.sponsor()) {
@@ -56,34 +57,38 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 			dc = new DistributedTransactionContext(globalTxId);
 			dc.init();
 			DistributedTransactionContext.setDistributedTransactionContext(dc);
-			String action = dt.action();
+			String action = dt.action(); 
 			dc.setAction(action);
 			Object obj = null;
 			try {
-					obj = invocation.proceed();
-			} catch (Exception e) {
+				log.debug("transaction proceed sponsor:{} action:{}",dc.getGlobalTxId(),action);
+				obj = invocation.proceed();
+			} catch (Throwable e) {
 				cancel(action, globalTxId);
-				throw e;
-			}finally {
+				log.debug("transaction proceed exception sponsor:{} action:{} ",dc.getGlobalTxId(),action);
+				throw e; 
+			} finally {
 				DistributedTransactionContext.setDistributedTransactionContext(null);
 			}
-			if (dc.isCancel()) { 
+			if (dc.isCancel()) {
 				try {
+					log.debug("transaction proceed cancel sponsor:{} action:{} ",dc.getGlobalTxId(),action);
 					cancel(action, globalTxId);
 				} catch (Exception e) {
-					log.error("distributed_transaction_cancel",e);
+					log.error("distributed_transaction_cancel", e);
 				}
 			} else {
 				try {
-					confirm(action, globalTxId); 
+					log.debug("transaction proceed confirm sponsor:{} action:{} ",dc.getGlobalTxId(),action);
+					confirm(action, globalTxId);
 				} catch (Exception e) {
-					log.error("distributed_transaction_confirm",e);
+					log.error("distributed_transaction_confirm", e);
 				}
 			}
 			return obj;
-		}else {
+		} else {
 			Object args[] = invocation.getArguments();
-			if (dc != null&&!dc.isCancel()) {
+			if (dc != null && !dc.isCancel()) {
 				String globalTxId = dc.getGlobalTxId();
 				int position = -1;
 				Parameter[] parameters = method.getParameters();
@@ -104,7 +109,7 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 									+ invocation.getThis() + "\t" + method.getName());
 				DistributedTransactionContext branch_dc = new DistributedTransactionContext(globalTxId);
 				branch_dc.setAttachment(dc.getAttachment());
-				branch_dc.init(); 
+				branch_dc.init();
 				args[position] = branch_dc;
 				branch_dc.setAction(dt.action());
 				branch_dc.setStatus(TransactionStatus.COMMITING);
@@ -114,21 +119,23 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 				Exception error = null;
 				boolean success = true;
 				try {
-					transactionRepository.create(serializableData); 
-					if(invoker!=null)
+					log.debug("transaction proceed  globalTxid:{} branchTxId:{} action:{} create to redis",branch_dc.getGlobalTxId(),branch_dc.getBranchTxId(),branch_dc.getAction());
+					transactionRepository.create(serializableData);
+					if (invoker != null)
 						obj = invoker.invoke(invocation, dc);
 					else
 						obj = invocation.proceed();
-				 } catch (Exception e) {
+				} catch (Exception e) {
 					error = e;
 					success = false;
-				 }
+				}
 				dc.setAttachment(null);
 				if (!success) {
+					log.debug("transaction proceed failed globalTxid:{} branchTxId:{} action:{} create to redis",branch_dc.getGlobalTxId(),branch_dc.getBranchTxId(),branch_dc.getAction());
 					dc.setCancel(true);
 					if (error != null)
 						throw error;
-				} 
+				}
 				return obj;
 			} else {
 				Object obj = null;
@@ -148,7 +155,7 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 
 	@Autowired
 	private TransactionRepository transactionRepository;
-	
+
 	ServiceLoader<TransactionRepository> services = ServiceLoader.load(TransactionRepository.class);
 //	public static final String QNAME = "distributed_transaction_queue";
 
@@ -185,21 +192,19 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 
 	public void confirm(String action, String globalTxId) throws Exception {
 		Map data = new HashMap();
-		data.put("status",TransactionStatus.CONFIRM);
+		data.put("status", TransactionStatus.CONFIRM);
 		data.put("action", action);
-		data.put("globalTxId", globalTxId); 
-		transactionRepository.updateDataByGlobalTxId(globalTxId,data);
+		data.put("globalTxId", globalTxId);
+		transactionRepository.updateDataByGlobalTxId(globalTxId, data);
 		String msg = JsonUtils.objectToJson(data);
 		jmsSender.sent(jmsConfig.getTransactionQueueName(), msg);
 	}
 
-	
-	
 	public void cancel(String action, String globalTxId) throws Exception {
 		Map<String, Object> data = new HashMap();
 		data.put("status", TransactionStatus.CANCEL);
 		data.put("action", action);
-		data.put("globalTxId", globalTxId);
+		data.put("globalTxId", globalTxId); 
 		transactionRepository.updateDataByGlobalTxId(globalTxId, data);
 		String msg = JsonUtils.objectToJson(data);
 		jmsSender.sent(jmsConfig.getTransactionQueueName(), msg);
