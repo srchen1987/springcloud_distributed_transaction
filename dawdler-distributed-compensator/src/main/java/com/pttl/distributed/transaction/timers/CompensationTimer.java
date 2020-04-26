@@ -35,7 +35,7 @@ public class CompensationTimer {
 	 @Scheduled(fixedRate=15000)
     private void configureTasks() {
 		 try {
-			 List<DistributedTransactionContext> list = transactionRepository.findALLBySecondsLater(10);
+			 List<DistributedTransactionContext> list = transactionRepository.findALLBySecondsLater(3600);
 			 for(DistributedTransactionContext dc : list) {
 				  String commiting = TransactionStatus.COMMITING;
 				  if(commiting.equals(dc.getStatus()))continue;

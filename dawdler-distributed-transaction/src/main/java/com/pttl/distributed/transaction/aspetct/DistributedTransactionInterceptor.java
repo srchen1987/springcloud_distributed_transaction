@@ -60,31 +60,38 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 			String action = dt.action(); 
 			dc.setAction(action);
 			Object obj = null;
+			boolean intervene = false;
 			try {
-				log.debug("transaction proceed sponsor:{} action:{}",dc.getGlobalTxId(),action);
+				if(log.isDebugEnabled())
+					log.debug("transaction proceed sponsor:{} action:{}",dc.getGlobalTxId(),action);
 				obj = invocation.proceed();
 			} catch (Throwable e) {
-				cancel(action, globalTxId);
-				log.debug("transaction proceed exception sponsor:{} action:{} ",dc.getGlobalTxId(),action);
+				if(!dc.isIntervene())
+					cancel(action, globalTxId);
+				if(log.isDebugEnabled())
+					log.debug("transaction proceed exception sponsor:{} action:{} ",dc.getGlobalTxId(),action);
 				throw e; 
 			} finally {
 				DistributedTransactionContext.setDistributedTransactionContext(null);
 			}
-			if (dc.isCancel()) {
-				try {
-					log.debug("transaction proceed cancel sponsor:{} action:{} ",dc.getGlobalTxId(),action);
-					cancel(action, globalTxId);
-				} catch (Exception e) {
-					log.error("distributed_transaction_cancel", e);
+			if(!dc.isIntervene())
+				if (dc.isCancel()) {
+					try {
+						if(log.isDebugEnabled())
+							log.debug("transaction proceed cancel sponsor:{} action:{} ",dc.getGlobalTxId(),action);
+						cancel(action, globalTxId);
+					} catch (Exception e) {
+						log.error("distributed_transaction_cancel", e);
+					}
+				} else {
+					try {
+						if(log.isDebugEnabled())
+							log.debug("transaction proceed confirm sponsor:{} action:{} ",dc.getGlobalTxId(),action);
+						confirm(action, globalTxId);
+					} catch (Exception e) {
+						log.error("distributed_transaction_confirm", e);
+					}
 				}
-			} else {
-				try {
-					log.debug("transaction proceed confirm sponsor:{} action:{} ",dc.getGlobalTxId(),action);
-					confirm(action, globalTxId);
-				} catch (Exception e) {
-					log.error("distributed_transaction_confirm", e);
-				}
-			}
 			return obj;
 		} else {
 			Object args[] = invocation.getArguments();
@@ -119,7 +126,8 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 				Exception error = null;
 				boolean success = true;
 				try {
-					log.debug("transaction proceed  globalTxid:{} branchTxId:{} action:{} create to redis",branch_dc.getGlobalTxId(),branch_dc.getBranchTxId(),branch_dc.getAction());
+					if(log.isDebugEnabled())
+						log.debug("transaction proceed  globalTxid:{} branchTxId:{} action:{} create to redis",branch_dc.getGlobalTxId(),branch_dc.getBranchTxId(),branch_dc.getAction());
 					transactionRepository.create(serializableData);
 					if (invoker != null)
 						obj = invoker.invoke(invocation, dc);
@@ -131,7 +139,8 @@ public class DistributedTransactionInterceptor implements MethodInterceptor {
 				}
 				dc.setAttachment(null);
 				if (!success) {
-					log.debug("transaction proceed failed globalTxid:{} branchTxId:{} action:{} create to redis",branch_dc.getGlobalTxId(),branch_dc.getBranchTxId(),branch_dc.getAction());
+					if(log.isDebugEnabled())
+						log.debug("transaction proceed failed globalTxid:{} branchTxId:{} action:{} create to redis",branch_dc.getGlobalTxId(),branch_dc.getBranchTxId(),branch_dc.getAction());
 					dc.setCancel(true);
 					if (error != null)
 						throw error;
