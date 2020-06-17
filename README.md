@@ -25,4 +25,4 @@
  7、访问dt_demo_order 的index.html 测试  
  
 流程图如下：
-![image](https://raw.githubusercontent.com/wiki/srchen1987/springcloud_distributed_transaction/transaction.png)
+![流程图](https://images.gitee.com/uploads/images/2020/0617/095314_fb748a55_2248173.png "transaction.png")
