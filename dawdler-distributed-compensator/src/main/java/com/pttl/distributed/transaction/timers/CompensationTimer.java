@@ -2,6 +2,7 @@ package com.pttl.distributed.transaction.timers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.pttl.distributed.transaction.annotation.TransactionStatus;
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
-import com.pttl.distributed.transaction.jms.JmsConfig;
-import com.pttl.distributed.transaction.jms.JmsSender;
+import com.pttl.distributed.transaction.message.MessageSender;
 import com.pttl.distributed.transaction.repository.TransactionRepository;
 import com.pttl.distributed.transaction.util.JsonUtils;
 /**
@@ -27,10 +27,8 @@ public class CompensationTimer {
 	@Autowired
 	TransactionRepository transactionRepository;
 	@Autowired
-	JmsSender jmsSender;
+	MessageSender messageSender;
 
-	@Autowired(required = false)
-	private JmsConfig jmsConfig;
 	
 	 @Scheduled(fixedRate=15000)
     private void configureTasks() {
@@ -45,7 +43,7 @@ public class CompensationTimer {
 					data.put("globalTxId",dc.getGlobalTxId()); 
 					String msg = JsonUtils.objectToJson(data);
 					log.debug("transaction compensate:{}",msg);
-					jmsSender.sent(jmsConfig.getTransactionQueueName(), msg);
+					messageSender.sent(msg);
 			    }
 		} catch (Exception e) {
 			log.error("",e);

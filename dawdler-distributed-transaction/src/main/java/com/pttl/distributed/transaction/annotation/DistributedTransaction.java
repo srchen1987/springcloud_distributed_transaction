@@ -19,6 +19,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 public @interface DistributedTransaction {
+
 String action();//订阅动作
 
 boolean sponsor() default false;//是否为调用者 默认为协调者

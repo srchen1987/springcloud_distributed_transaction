@@ -1,14 +1,22 @@
 package com.pttl.distributed.transaction.annotation;
+import java.util.Map;
+
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
 import com.pttl.distributed.transaction.aspetct.AnnotationBeanPostProcessor;
 import com.pttl.distributed.transaction.aspetct.DistributedTransactionInterceptor;
-import com.pttl.distributed.transaction.jms.JmsConfig;
 public class InitDistributedTransaction implements ImportSelector{
 	@Override
 	public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-		return new String[]{JmsConfig.class.getName(),AnnotationBeanPostProcessor.class.getName(),DistributedTransactionInterceptor.class.getName(),(String) importingClassMetadata.getAnnotationAttributes(EnableDistributedTransaction.class.getName()).get("transactionRepository")};
+		Map data = getAnnotationAttributesData(importingClassMetadata);
+		return new String[]{AnnotationBeanPostProcessor.class.getName(),
+				DistributedTransactionInterceptor.class.getName(),
+				((Class)data.get("transactionRepository")).getName()
+		};
+	}
+	private Map<String, Object> getAnnotationAttributesData(AnnotationMetadata importingClassMetadata) {
+		 return importingClassMetadata.getAnnotationAttributes(EnableDistributedTransaction.class.getName());
 	}
 
 }

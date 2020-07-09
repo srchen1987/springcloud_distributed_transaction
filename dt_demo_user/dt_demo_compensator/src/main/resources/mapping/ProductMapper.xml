@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pttl.mapper.product.ProductMapper">
+	<update id="updaterepertory">
+		update product set repertory=repertory+#{repertory} where productid =
+		#{productid}
+	</update>
+
+
+
+	<update id="updateProductOperateInfo">
+		update product_operate_info set status=#{status}  where branch_tx_id
+		= #{branch_tx_id} and status ='commiting'
+	</update>
+	
+	
+	<select id="selectProductOperateInfo" resultType="java.util.HashMap">
+		select repertory,productid from product_operate_info
+		where branch_tx_id
+		= #{branch_tx_id} and status ='commiting'
+	</select>
+
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pttl.mapper.product.ProductMapper">
+
+    <resultMap id="BaseResultMap" type="com.pttl.entity.product.Product">
+        <result column="productid" jdbcType="INTEGER" property="productid" />
+        <result column="gold" jdbcType="DECIMAL" property="gold" />
+        <result column="repertory" jdbcType="INTEGER" property="repertory" />
+    </resultMap>
+
+    <update id="updaterepertory">
+        update product set repertory=repertory-#{repertory} where productid = #{productid} and repertory-#{repertory}>0
+    </update>
+
+    <insert id="insertProductOperateInfo" parameterType="com.pttl.entity.product.ProductOperateInfo">
+        insert into product_operate_info
+        values (#{branchTxId},#{productid},#{repertory},#{status},#{addtime})
+    </insert>
+  
+</mapper>

@@ -77,6 +77,16 @@ public class JsonUtils {
 		}
 		return t;
 	}
+	
+	public static <T> T jsonToClass(byte[] jsonByte, Class<T> beanType) {
+		T t = null;
+		try {
+			t = mapper.readValue(jsonByte, beanType);
+		} catch (Exception e) {
+			log.error("",e);
+		}
+		return t;
+	}
 
 	public static Map<String, Object> jsonToMap(String json) {
 		Map<String, Object> map = null;
