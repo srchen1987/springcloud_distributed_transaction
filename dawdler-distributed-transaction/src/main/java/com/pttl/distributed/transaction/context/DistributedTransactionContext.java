@@ -27,7 +27,11 @@ public class DistributedTransactionContext<T> implements Serializable,Cloneable{
 	private int retryTime=0;//重试次数
 	private Map<String,Object> datas;
 	private T attachment;//其他对象需要传入的 因为springcloud 只支持一个对象参数
-	private boolean intervene;//是否被干扰 如果被干扰 其他状态不生效 存为commting状态
+	/**
+	 * 是否被干扰 如果被干扰 其他状态不生效 存为commting状态
+	 * 在商城实际应用场景中是因为开发人员没有
+	 */
+	private boolean intervene;
 	 
 	public boolean isIntervene() {
 		return intervene;

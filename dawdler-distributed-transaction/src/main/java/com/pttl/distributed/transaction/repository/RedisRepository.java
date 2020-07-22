@@ -15,7 +15,7 @@ import redis.clients.jedis.JedisPool;
 /**
  * 
  * @ClassName:  RedisRepository   
- * @Description:   基于redis的实现
+ * @Description:   基于redis的实现 基本不用了，用springtemplate模式即可，另外每次new 内部类很不好 可以提取出来做全局变量
  * @author: srchen    
  * @date:   2019年11月01日 下午10:19:32
  */
