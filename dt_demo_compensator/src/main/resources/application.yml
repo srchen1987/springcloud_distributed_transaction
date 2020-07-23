@@ -6,19 +6,19 @@ server:
   port: 8768
 spring:
   profiles:
-   active: dev
+   active: uat
   application:
     name: compensator
   datasource:
     product:
       driver-class-name: com.mysql.cj.jdbc.Driver
       password: 123456
-      url: jdbc:mysql://127.0.0.1:3306/product?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+      jdbcUrl: jdbc:mysql://127.0.0.1:3306/product?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
       username: root
     user:
       driver-class-name: com.mysql.cj.jdbc.Driver
       password: 123456
-      url: jdbc:mysql://127.0.0.1:3306/user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+      jdbcUrl: jdbc:mysql://127.0.0.1:3306/user?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
       username: root
   redis:
         block-when-exhausted: true
@@ -38,20 +38,21 @@ spring:
     password: jackson123
     username: jackson
   rabbitmq:
-     enabled: true
      host: 192.168.221.254
      port: 5677
      username: pttl_mq_user
      password: isu#12934.@1235.0)#
-     virtual-host: /sit
+     virtual-host: /uat
      exchange: transaction
+     publisher-confirms: true
+     publisher-returns: true
      listener:
        simple:
          acknowledge-mode: manual 
          retry:
            enabled: true
            max-attempts: 2
-           initial-interval: 1000	
+           initial-interval: 1000			
 dawdler:
   transaction:
     mqserver: rabbitmq

@@ -6,7 +6,7 @@ server:
   port: 8765
 spring:
   profiles:
-   active: dev
+   active: uat
   application:
     name: order
   datasource:
@@ -35,7 +35,7 @@ spring:
      port: 5677
      username: pttl_mq_user
      password: isu#12934.@1235.0)#
-     virtual-host: /sit
+     virtual-host: /uat
      exchange: transaction
      publisher-confirms: true
      publisher-returns: true

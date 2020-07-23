@@ -1,6 +1,5 @@
 package com.pttl.distributed.transaction.message.amqp;
 import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -41,9 +40,10 @@ public class AmqpConsumer extends MessageConsumer{
 	 * @date:   2020年6月28日 上午11:11:10
 	 */
 	@RabbitHandler
-	@RabbitListener(bindings = @QueueBinding(value = 
-			@Queue(value="distributed_transaction_queue_${spring.profiles.active:}", durable = "true"),
-			exchange = @Exchange(value="${spring.rabbitmq.exchange:}")),admin = "rabbitAdmin")
+	@RabbitListener( 
+			bindings = @QueueBinding(value = 
+			@Queue(value="distributed_transaction_queue_${spring.profiles.active:}",durable = "true"),
+			exchange = @Exchange(value="${spring.rabbitmq.exchange:}",durable = "true"),key = "distributed_transaction_queue_${spring.profiles.active:}"),admin = "rabbitAdmin")
 	public void consumer(Channel channel,Message message){
 		consumer(message.getBody());
 		try {
