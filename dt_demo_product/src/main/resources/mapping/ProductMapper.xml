@@ -9,7 +9,7 @@
     </resultMap>
 
     <update id="updaterepertory">
-        update product set repertory=repertory-#{repertory} where productid = #{productid} and repertory-#{repertory}>0
+        update product set repertory=repertory-#{repertory} where productid = #{productid} and repertory-#{repertory}>=0
     </update>
 
     <insert id="insertProductOperateInfo" parameterType="com.pttl.entity.product.ProductOperateInfo">

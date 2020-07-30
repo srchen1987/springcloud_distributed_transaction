@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService{
 		userGoldInfo.setUserid(userid);
 		userGoldInfo.setGold(payment);
 		userGoldInfo.setStatus("commiting");
-		userGoldInfo.setAddtime((int)System.currentTimeMillis());
+		userGoldInfo.setAddtime((int)(System.currentTimeMillis()/1000));
 		int result = userMapper.updatePaymentUser(userid, payment);
 		if(result==0)throw new RuntimeException("inadequate！");
 		return userMapper.insertUserGoldInfo(userGoldInfo);

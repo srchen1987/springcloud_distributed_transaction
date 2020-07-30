@@ -31,7 +31,8 @@ spring:
     password: jackson123
     username: jackson
   rabbitmq:
-     host: 192.168.221.254
+     #host: 192.168.221.254
+     host: 192.168.242.188
      port: 5677
      username: pttl_mq_user
      password: isu#12934.@1235.0)#
@@ -48,7 +49,20 @@ spring:
            initial-interval: 1000		
 feign:
   hystrix:
-     enabled: false
+    enabled: false //feign开启hystrix支持
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
+ribbon:
+  ReadTimeout: 15000
+  ConnectTimeout: 15000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0  
+  OkToRetryOnAllOperations: false 
 dawdler:
   transaction:
     mqserver: rabbitmq

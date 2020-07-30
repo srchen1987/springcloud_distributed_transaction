@@ -50,12 +50,12 @@ public class OrderServiceImpl implements OrderService{
 		order.setPid(productId);
 		order.setQuantity(repertory);
 		order.setStatus(TransactionStatus.COMMITING);
-		order.setAddtime((int)System.currentTimeMillis());
+		order.setAddtime((int)(System.currentTimeMillis()/1000));
 		try {
 			List list = new ArrayList();
 			list.add(1);
 			DistributedTransactionContext.getDistributedTransactionContext().setAttachment(list);
-			userService.payment(null,userId,payment);
+			userService.payment(null,userId,payment); 
 			List list2 = new ArrayList();
 			list2.add(2);
 			DistributedTransactionContext.getDistributedTransactionContext().setAttachment(list2);
@@ -63,8 +63,7 @@ public class OrderServiceImpl implements OrderService{
 			orderMapper.insertOrder(order);
 			return true;
 		}catch (Exception e){
-			e.printStackTrace();
-			return false;
+			throw e;
 		}
 	}
 
