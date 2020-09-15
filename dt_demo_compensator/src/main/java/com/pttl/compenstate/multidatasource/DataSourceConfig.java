@@ -10,9 +10,8 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;//如果为1.5.6 或1.5.x 就用这个包 spring boot开发者真是没意思 所以一直不喜欢用 spring
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;//如果为1.5.6 或1.5.x 就用这个包 spring boot开发者真是没意思 所以一直不喜欢用 spring
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
