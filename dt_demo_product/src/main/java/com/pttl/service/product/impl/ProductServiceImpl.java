@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService{
 		productOperateInfo.setProductid(productid);
 		productOperateInfo.setRepertory(repertory);
 		productOperateInfo.setStatus("commiting");
-		productOperateInfo.setAddtime((int)(System.currentTimeMillis()/1000));
+		productOperateInfo.setAddtime((int)System.currentTimeMillis());
 		int result = productMapper.updaterepertory(productid, repertory);
 		if(result==0)throw new RuntimeException("inadequate！");
 		return productMapper.insertProductOperateInfo(productOperateInfo);

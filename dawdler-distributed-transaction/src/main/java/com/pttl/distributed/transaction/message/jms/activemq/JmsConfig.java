@@ -1,8 +1,17 @@
 package com.pttl.distributed.transaction.message.jms.activemq;
+import javax.jms.ConnectionFactory;
+
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.config.JmsListenerContainerFactory;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
+
 import com.pttl.distributed.transaction.message.MessageConfig;
 /**
  * 
@@ -41,34 +50,34 @@ public class JmsConfig extends MessageConfig {
 	 
 	 
 	
-//	@Autowired
-//	private ConnectionFactory activeMQConnectionFactory;
+	@Autowired
+	private ConnectionFactory activeMQConnectionFactory;
 
-//	@Bean
-//	public ConnectionFactory activeMQConnectionFactory() {
-//		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-//		factory.setBrokerURL(brokerUrl);
-//		factory.setAlwaysSyncSend(true);
-//		factory.setUserName(username);
-//		factory.setPassword(password);
-//		return factory;
-//	}
+	@Bean
+	public ConnectionFactory activeMQConnectionFactory() {
+		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
+		factory.setBrokerURL(brokerUrl);
+		factory.setAlwaysSyncSend(true);
+		factory.setUserName(username);
+		factory.setPassword(password);
+		return factory;
+	}
 
 	
-//	@Bean("transactionJmsListenerContainerFactory")
-//  public JmsListenerContainerFactory<?> jmsListenerContainerFactory() {
-//        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-//        factory.setConnectionFactory(activeMQConnectionFactory);
-////        factory.setPubSubDomain(true);
-////        factory.setConcurrency("3-10");
-//        factory.setRecoveryInterval(1000L);
-//        return factory;
-//    }
-//	@Bean
-//	public JmsTemplate jmsTemplate() {
-//		JmsTemplate jmsTemplate = new JmsTemplate(activeMQConnectionFactory);
-////		 jmsTemplate.setSessionAcknowledgeMode(4);
-//		return jmsTemplate;
-//	}
+	@Bean("transactionJmsListenerContainerFactory")
+  public JmsListenerContainerFactory<?> jmsListenerContainerFactory() {
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(activeMQConnectionFactory);
+//        factory.setPubSubDomain(true);
+//        factory.setConcurrency("3-10");
+        factory.setRecoveryInterval(1000L);
+        return factory;
+    }
+	@Bean
+	public JmsTemplate jmsTemplate() {
+		JmsTemplate jmsTemplate = new JmsTemplate(activeMQConnectionFactory);
+//		 jmsTemplate.setSessionAcknowledgeMode(4);
+		return jmsTemplate;
+	}
 
 }

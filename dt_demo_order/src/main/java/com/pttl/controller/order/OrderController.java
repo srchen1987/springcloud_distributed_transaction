@@ -18,17 +18,13 @@ public class OrderController {
 	
     @PostMapping(value = "/buyProduct")
     public String buyProduct(@RequestParam String product,@RequestParam String num){
-    	try {
-    		boolean result = orderService.buyProduct(product,num);
-    		if(result)
-    			return "购买成功";
-    		else
-    			return "购买失败！";
-		} catch (Exception e) {
-				e.printStackTrace();
-			 return "购买失败";
-		}
-    			
+    	boolean result = orderService.buyProduct(product,num);
+        if(result) {
+            return "购买成功";
+        }
+        else {
+            return "购买失败";
+        }
     }
     
     @GetMapping(value = "/test")

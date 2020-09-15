@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService{
 		order.setPid(productId);
 		order.setQuantity(repertory);
 		order.setStatus(TransactionStatus.COMMITING);
-		order.setAddtime((int)(System.currentTimeMillis()/1000));
+		order.setAddtime((int)System.currentTimeMillis());
 		try {
 			List list = new ArrayList();
 			list.add(1);

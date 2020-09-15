@@ -38,8 +38,7 @@ spring:
     password: jackson123
     username: jackson
   rabbitmq:
-     #host: 192.168.221.254
-     host: 192.168.242.188
+     host: 192.168.221.254
      port: 5677
      username: pttl_mq_user
      password: isu#12934.@1235.0)#

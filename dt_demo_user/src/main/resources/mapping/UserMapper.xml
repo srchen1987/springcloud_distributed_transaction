@@ -6,7 +6,7 @@
         <result column="gold" jdbcType="DECIMAL" property="gold" />
     </resultMap>
     <update id="updatePaymentUser">
-        update user set gold=gold-#{payment} where userid = #{userid} and gold-#{payment}>=0
+        update user set gold=gold-#{payment} where userid = #{userid} and gold-#{payment}>0
     </update>
 
     <insert id="insertUserGoldInfo" parameterType="com.pttl.entity.user.UserGoldInfo">
