@@ -26,25 +26,14 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-	  <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-	  </dependency>
-		 <!--  <dependency> 
+ 
+		   <dependency> 
 		  <groupId>org.springframework.cloud</groupId>
 		   <artifactId>spring-cloud-starter-eureka</artifactId> 
-			</dependency>   -->
-		<!--  <dependency> <groupId>org.springframework.cloud</groupId>
+			</dependency>   
+	   <dependency> <groupId>org.springframework.cloud</groupId>
 		  <artifactId>spring-cloud-starter-feign</artifactId> 
-		</depend ency> -->
+		</dependency>  
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -60,9 +49,9 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId> 
+		<dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId> 
 			</dependency> <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-hystrix</artifactId> 
-			</dependency> -->
+			</dependency> 
 
 		<dependency>
 			<groupId>dawdler</groupId>
@@ -95,7 +84,7 @@
 	</dependencies>
 
 	<dependencyManagement>
-	<!-- 		<dependencies>
+  		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
@@ -103,16 +92,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-		</dependencies> -->
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Hoxton.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
+		</dependencies>  
 	</dependencyManagement>
 
 	<build>
