@@ -5,23 +5,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-
-import org.apache.activemq.command.ActiveMQMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.stereotype.Component;
-
 import com.pttl.distributed.transaction.context.DistributedTransactionContext;
-import com.pttl.distributed.transaction.message.jms.activemq.JmsConfig;
 import com.pttl.distributed.transaction.repository.TransactionRepository;
 import com.pttl.distributed.transaction.thread.DefaultThreadFactory;
 import com.pttl.distributed.transaction.util.JsonUtils;
@@ -50,7 +40,7 @@ public class MessageConsumer implements ApplicationContextAware{
 		consumer(JsonUtils.jsonToClass(message, Map.class));
 	}
 	
-  public void consumer(byte[] messageByte){
+    public void consumer(byte[] messageByte){
 	  consumer(JsonUtils.jsonToClass(messageByte, Map.class));
 	}
 	/**

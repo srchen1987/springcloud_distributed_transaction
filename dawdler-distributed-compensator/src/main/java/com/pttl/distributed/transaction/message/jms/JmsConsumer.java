@@ -1,14 +1,13 @@
 package com.pttl.distributed.transaction.message.jms;
+
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-
 import org.apache.activemq.command.ActiveMQMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-
 import com.pttl.distributed.transaction.message.MessageConsumer;
 import com.pttl.distributed.transaction.message.jms.activemq.JmsConfig;
 /**

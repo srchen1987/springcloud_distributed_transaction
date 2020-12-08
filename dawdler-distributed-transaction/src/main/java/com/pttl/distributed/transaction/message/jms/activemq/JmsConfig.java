@@ -1,6 +1,5 @@
 package com.pttl.distributed.transaction.message.jms.activemq;
 import javax.jms.ConnectionFactory;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +19,6 @@ import com.pttl.distributed.transaction.message.MessageConfig;
  * @author: srchen
  * @date:   2019年11月02日 上午0:02:41
  */
-//@Configuration("distributedJmsConfig")
-//@PropertySource("classpath:application.properties")
-
 @Component
 @ConfigurationProperties(prefix="spring.activemq")
 @ConditionalOnExpression("'${dawdler.transaction.mqserver}'.equals('activemq')")
