@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.pttl.distributed.transaction.message.MessageConfig;
 /**
  * 
- * @ClassName:  JmsConfig   
+ * @ClassName:  AmqpConfig   
  * @Description:   AMQP配置
  * @author: srchen
  * @date:    2020年06月23日 下午08:05:12
