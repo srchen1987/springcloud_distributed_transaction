@@ -42,7 +42,6 @@ public class RedisRepository extends TransactionRepository {
 
 	@Override
 	public int update(DistributedTransactionContext transaction) throws Exception {
-		byte[] datas = serializer.serialize(transaction);
 		return execute(jedisPool, new JedisExecutor<Integer>() {
 			@Override
 			public Integer execute(Jedis jedis) throws Exception {
