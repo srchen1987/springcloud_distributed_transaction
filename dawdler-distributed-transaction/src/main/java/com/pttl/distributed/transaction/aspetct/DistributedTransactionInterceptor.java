@@ -102,7 +102,6 @@ public class DistributedTransactionInterceptor implements MethodInterceptor{
 				Map<String, Object> datas = new HashMap();
 				for (int i = 0; i < parameters.length; i++) {
 					String key = parameters[i].getName();
-					parameters[i].getType();
 					if (parameters[i].getType().equals(DistributedTransactionContext.class)) {
 						position = i;
 					} else {
